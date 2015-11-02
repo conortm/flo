@@ -110,7 +110,7 @@ class Application extends BaseApplication {
     $commands[] = new Command\Deployments\TagDeploy();
     $commands[] = new Command\Deployments\TagPreRelease();
     $commands[] = new Command\RunScriptCommand();
-    $commands[] = new Command\FeaturesOverwrittenChecker();
+    $commands[] = new Command\FeaturesOverriddenChecker();
 
     return $commands;
   }

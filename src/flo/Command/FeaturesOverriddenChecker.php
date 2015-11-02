@@ -15,7 +15,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Github;
 
 
-class FeaturesOverwrittenChecker extends Command {
+class FeaturesOverriddenChecker extends Command {
   protected function configure() {
     $this->setName('check-features')
       ->setDescription('runs `drush fl` to check features.');
