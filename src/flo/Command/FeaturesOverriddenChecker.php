@@ -18,7 +18,7 @@ use Github;
 class FeaturesOverriddenChecker extends Command {
   protected function configure() {
     $this->setName('check-features')
-      ->setDescription('runs `drush fl` to check features.');
+      ->setDescription('Runs `drush features-list` to check features overridden status.');
   }
 
   /**
