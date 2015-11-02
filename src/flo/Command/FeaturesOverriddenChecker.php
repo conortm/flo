@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Runs php parallel-lint on change files only.
+ * Checks to see if any features have been overridden.
  */
 
 namespace flo\Command;
