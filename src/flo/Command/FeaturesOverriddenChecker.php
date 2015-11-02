@@ -60,11 +60,13 @@ class FeaturesOverriddenChecker extends Command {
     $pull_request = $this->getConfigParameter('pull_request');
     $path = "{$pull_request['prefix']}-{$pullRequest}.{$pull_request['domain']}";
     $pr_directories = $this->getConfigParameter('pr_directories');
-    $process = new Process("cd {$pr_directories}{$path}/scripts && bash features-checker.sh");
+    $process = new Process("drush features-list");
     $process->setTimeout(60 * 2);
     $process->run();
 
-    if (!$process->isSuccessful()) {
+    $overridden = preg_grep('Overridden' ,$process->getOutput());
+
+    if ($overridden) {
       $output->writeln("<error>There are some overridden features.</error>");
       $output->writeln($process->getOutput());
       $gh_status_state = 'failure';
@@ -94,7 +96,7 @@ class FeaturesOverriddenChecker extends Command {
           'state' => $gh_status_state,
           'target_url' => $targetURL,
           'description' => $gh_status_desc,
-          'context' => "drush/feature-checker",
+          'context' => "drush/features-checker",
         )
       );
     }
