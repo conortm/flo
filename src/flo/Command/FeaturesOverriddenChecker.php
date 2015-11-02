@@ -68,12 +68,12 @@ class FeaturesOverriddenChecker extends Command {
       $output->writeln("<error>There are some overridden features.</error>");
       $output->writeln($process->getOutput());
       $gh_status_state = 'failure';
-      $gh_statue_desc = 'Drush: Feature Checker failure.';
+      $gh_status_desc = 'Drush: Feature Checker failure.';
     }
     else {
       $output->writeln("<info>No overridden features have been found.</info>");
       $gh_status_state = 'success';
-      $gh_statue_desc = 'Drush: Feature Checker success.';
+      $gh_status_desc = 'Drush: Feature Checker success.';
       $output->writeln("<info>PR #$pullRequest has been checked successfully.</info>");
     }
 
@@ -93,7 +93,7 @@ class FeaturesOverriddenChecker extends Command {
         array(
           'state' => $gh_status_state,
           'target_url' => $targetURL,
-          'description' => $gh_statue_desc,
+          'description' => $gh_status_desc,
           'context' => "drush/feature-checker",
         )
       );
