@@ -60,7 +60,8 @@ class FeaturesOverriddenChecker extends Command {
     $pull_request = $this->getConfigParameter('pull_request');
     $path = "{$pull_request['prefix']}-{$pullRequest}.{$pull_request['domain']}";
     $pr_directories = $this->getConfigParameter('pr_directories');
-    $process = new Process("drush features-list");
+
+    $process = new Process("cd {$pr_directories}{$path}/docroot && drush features-list");
     $process->setTimeout(60 * 2);
     $process->run();
 
