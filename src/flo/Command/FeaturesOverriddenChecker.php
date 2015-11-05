@@ -26,9 +26,9 @@ class FeaturesOverriddenChecker extends Command {
    */
   protected function execute(InputInterface $input, OutputInterface $output) {
     $gh_status_post = FALSE;
-    $targetRef = getenv(self::GITHUB_PULL_REQUEST_COMMIT);
-    $targetURL = getenv(self::JENKINS_BUILD_URL);
-    $pullRequest = getenv(self::GITHUB_PULL_REQUEST_ID);
+    $targetRef = getenv(static::GITHUB_PULL_REQUEST_COMMIT);
+    $targetURL = getenv(static::JENKINS_BUILD_URL);
+    $pullRequest = getenv(static::GITHUB_PULL_REQUEST_ID);
     $github = $this->getGithub();
 
     // Check if we're going to post to GH or not.
