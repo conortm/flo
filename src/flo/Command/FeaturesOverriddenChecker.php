@@ -75,6 +75,7 @@ class FeaturesOverriddenChecker extends Command {
     }
     else {
       $output->writeln("<info>No overridden features have been found.</info>");
+      $output->writeln($process->getOutput());
       $gh_status_state = 'success';
       $gh_status_desc = 'Drush: Feature Checker success.';
       $output->writeln("<info>PR #$pullRequest has been checked successfully.</info>");
