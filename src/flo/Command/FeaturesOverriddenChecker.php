@@ -64,6 +64,10 @@ class FeaturesOverriddenChecker extends Command {
     $overridden = preg_match('/Overridden/i' , $process->getOutput());
 
     if ($overridden) {
+      // This is for outputting a readable non-JSON table for console debugging.
+      $process = new Process("cd {$pr_directories}{$path}/docroot && drush features-list");
+      $process->setTimeout(60 * 2);
+      $process->run();
       $output->writeln("<error>There are some overridden features.</error>");
       $output->writeln($process->getOutput());
       $gh_status_state = 'failure';
