@@ -25,7 +25,6 @@ class FeaturesOverriddenChecker extends Command {
    * Process the check-features command.
    *
    * {@inheritDoc}
-   *
    */
   protected function execute(InputInterface $input, OutputInterface $output) {
     $gh_status_post = FALSE;
@@ -61,11 +60,11 @@ class FeaturesOverriddenChecker extends Command {
     $path = "{$pull_request['prefix']}-{$pullRequest}.{$pull_request['domain']}";
     $pr_directories = $this->getConfigParameter('pr_directories');
 
-    $process = new Process("cd {$pr_directories}{$path}/docroot && drush features-list");
+    $process = new Process("cd {$pr_directories}{$path}/docroot && drush --format=json features-list");
     $process->setTimeout(60 * 2);
     $process->run();
 
-    $overridden = preg_match('/overridden/i' , $process->getOutput());
+    $overridden = preg_match('/Overridden/i' , $process->getOutput());
 
     if ($overridden) {
       $output->writeln("<error>There are some overridden features.</error>");

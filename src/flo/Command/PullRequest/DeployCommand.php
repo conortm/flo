@@ -171,7 +171,7 @@ class DeployCommand extends Command {
     }
 
     if (OutputInterface::VERBOSITY_NORMAL <= $output->getVerbosity()) {
-      $output->writeln("<info>verbose: Creating / syncing database.</info>");
+      $output->writeln("<info>verbose: Installing or syncing database.</info>");
     }
 
     // Support multi-sites
