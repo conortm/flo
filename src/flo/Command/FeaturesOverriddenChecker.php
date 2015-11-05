@@ -65,7 +65,7 @@ class FeaturesOverriddenChecker extends Command {
     $process->setTimeout(60 * 2);
     $process->run();
 
-    $overridden = preg_grep('Overridden' ,$process->getOutput());
+    $overridden = preg_match('/overridden/i' , $process->getOutput());
 
     if ($overridden) {
       $output->writeln("<error>There are some overridden features.</error>");
