@@ -8,9 +8,7 @@ namespace flo\Command;
 
 use flo\Drupal;
 use Symfony\Component\Process\Process;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Github;
 
@@ -28,7 +26,6 @@ class FeaturesOverriddenChecker extends Command {
    */
   protected function execute(InputInterface $input, OutputInterface $output) {
     $gh_status_post = FALSE;
-    $targetBranch = getenv(self::GITHUB_PULL_REQUEST_TARGET_BRANCH);
     $targetRef = getenv(self::GITHUB_PULL_REQUEST_COMMIT);
     $targetURL = getenv(self::JENKINS_BUILD_URL);
     $pullRequest = getenv(self::GITHUB_PULL_REQUEST_ID);
