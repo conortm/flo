@@ -65,7 +65,7 @@ Options:
   --no-interaction -n Do not ask any interactive question.
 
 Available commands:
- check-features
+ check-features    Runs `drush features-list` and checks for overridden features.
  check-php         runs parallel-lint against the change files.
  check-php-cs      runs phpcs against the change files.
  config-del        Delete configurations key for flo command
