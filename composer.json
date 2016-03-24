@@ -64,5 +64,8 @@
   "bin": ["bin/flo"],
   "scripts": {
     "test": "phpunit"
+  },
+  "config": {
+    "secure-http": false
   }
 }
