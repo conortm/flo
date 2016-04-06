@@ -157,61 +157,70 @@ class DeployCommand extends Command {
       throw new \RuntimeException($process->getErrorOutput());
     }
 
-    // Lets generate the settings.local.php file.
-    $database_name = $input->getOption('database-name');
+    // Perform app-type-specific tasks:
+    switch ($this->getConfigParameter('app_type')) {
+      case "nodejs":
+      case "drupal8":
+        break;
+      // Drupal 7 requires settings file and database setup:
+      case "drupal7":
+      default:
+        // Lets generate the settings.local.php file.
+        $database_name = $input->getOption('database-name');
 
-    if (OutputInterface::VERBOSITY_NORMAL <= $output->getVerbosity()) {
-      $output->writeln("<info>verbose: Generating settings.local.php.</info>");
-    }
-    if (empty($database_name)) {
-      Drupal\DrupalSettings::generateSettings($pr_number, $site_dir);
-    }
-    else {
-      Drupal\DrupalSettings::generateSettings($pr_number, $site_dir, $database_name);
-    }
+        if (OutputInterface::VERBOSITY_NORMAL <= $output->getVerbosity()) {
+          $output->writeln("<info>verbose: Generating settings.local.php.</info>");
+        }
+        if (empty($database_name)) {
+          Drupal\DrupalSettings::generateSettings($pr_number, $site_dir);
+        }
+        else {
+          Drupal\DrupalSettings::generateSettings($pr_number, $site_dir, $database_name);
+        }
 
-    if (OutputInterface::VERBOSITY_NORMAL <= $output->getVerbosity()) {
-      $output->writeln("<info>verbose: Installing or syncing database.</info>");
-    }
+        if (OutputInterface::VERBOSITY_NORMAL <= $output->getVerbosity()) {
+          $output->writeln("<info>verbose: Installing or syncing database.</info>");
+        }
 
-    // Support multi-sites
-    if ($input->getOption('sync')) {
-      if (empty($pull_request['sync_alias'])) {
-        throw new InvalidConfigurationException("pull-request:sync_alias require for --sync option");
-      }
-      $source = $pull_request['sync_alias'];
-      // For now the target is always self
-      $target = 'self';
-      $process = new Process("cd {$pr_directories}{$path}/docroot/sites/{$site_dir} && drush sql-create --yes && drush sql-sync @{$source} @{$target} --yes");
-    }
-    else {
-      $process = new Process("cd {$pr_directories}{$path}/docroot && drush sql-create --yes && drush psi --yes --account-pass=pa55word");
-    }
+        // Support multi-sites
+        if ($input->getOption('sync')) {
+          if (empty($pull_request['sync_alias'])) {
+            throw new InvalidConfigurationException("pull-request:sync_alias require for --sync option");
+          }
+          $source = $pull_request['sync_alias'];
+          // For now the target is always self
+          $target = 'self';
+          $process = new Process("cd {$pr_directories}{$path}/docroot/sites/{$site_dir} && drush sql-create --yes && drush sql-sync @{$source} @{$target} --yes");
+        }
+        else {
+          $process = new Process("cd {$pr_directories}{$path}/docroot && drush sql-create --yes && drush psi --yes --account-pass=pa55word");
+        }
 
-    // The installation process has a 20 minute timeout anything greater gets cutoff.
-    if ($output->getVerbosity() == OutputInterface::VERBOSITY_VERY_VERBOSE) {
-      $output->writeln("<info>Process: {$process->getCommandLine()}");
-    }
-    $process->setTimeout(60 * 60);
-    $process->run();
-    if (!$process->isSuccessful()) {
-      if (!empty($input->getOption('env')) && !empty($input->getOption('ref'))) {
-        $ref = $input->getOption('ref');
-        $environment = $input->getOption('env');
+        // The installation process has a 20 minute timeout anything greater gets cutoff.
+        if ($output->getVerbosity() == OutputInterface::VERBOSITY_VERY_VERBOSE) {
+          $output->writeln("<info>Process: {$process->getCommandLine()}");
+        }
+        $process->setTimeout(60 * 60);
+        $process->run();
+        if (!$process->isSuccessful()) {
+          if (!empty($input->getOption('env')) && !empty($input->getOption('ref'))) {
+            $ref = $input->getOption('ref');
+            $environment = $input->getOption('env');
 
-        $github->api('deployment')->updateStatus(
-          $this->getConfigParameter('organization'),
-          $this->getConfigParameter('repository'),
-          $deployment['id'],
-          array(
-            'state' => 'error',
-            'target_url' => $url,
-            'description' => 'Failed PR Deployment'
-          )
-        );
-      }
+            $github->api('deployment')->updateStatus(
+              $this->getConfigParameter('organization'),
+              $this->getConfigParameter('repository'),
+              $deployment['id'],
+              array(
+                'state' => 'error',
+                'target_url' => $url,
+                'description' => 'Failed PR Deployment'
+              )
+            );
+          }
 
-      throw new \RuntimeException($process->getErrorOutput());
+          throw new \RuntimeException($process->getErrorOutput());
+        }
     }
 
     // If they have an env set then we also tag it on github.
