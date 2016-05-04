@@ -121,7 +121,12 @@ class DeployCommand extends Command {
 
     // Lets rsync this workspace now.
     $pull_request = $this->getConfigParameter('pull_request');
-    $path = "{$pull_request['prefix']}-{$pr_number}.{$pull_request['domain']}";
+    if (!empty($pull_request['domain_pattern'])) {
+      $path = str_replace('#PR#', $pr_number, $pull_request['domain_pattern']);
+    }
+    else {
+      $path = "{$pull_request['prefix']}-{$pr_number}.{$pull_request['domain']}";
+    }
     $url = "http://{$path}";
     $pr_directories = $this->getConfigParameter('pr_directories');
     if (empty($pr_directories)) {
